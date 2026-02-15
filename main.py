@@ -8,6 +8,8 @@ from snowflake_jobs import SnowflakeJobRunner  # "Job layer" som gir execute/cop
 from etl_pipeline import ETLPipeline  # Enkel pipeline-orchestrator med steg (steps) og rapport
 
 
+
+
 # Fullt kvalifisert tabellnavn til mart-tabellen din i Snowflake
 MART_TABLE = "VLO_SNOWFLAKE_LAB.ANALYTICS.MART_CUSTOMER_KPIS"
 
@@ -16,6 +18,7 @@ EXPORT_STAGE = "VLO_EXPORT_STAGE"
 
 # Lokal mappe der eksportfiler lastes ned
 EXPORT_DIR = "exports"
+
 
 
 def main() -> None:

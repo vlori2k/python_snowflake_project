@@ -1,0 +1,14 @@
+name: python_snowflake_project
+version: "1.0"
+config-version: 2
+
+profile: python_snowflake_project
+
+model-paths: ["models"]
+
+models:
+  python_snowflake_project:
+    staging:
+      materialized: view
+    marts:
+      materialized: table
