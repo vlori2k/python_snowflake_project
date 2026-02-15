@@ -43,7 +43,7 @@ def main() -> None:
     # Teller antall rader i mart-tabellen. Dette fungerer som enkel datakvalitetssjekk før export.
     pipeline.add_steps_to_pipeline(
         "validate_mart_has_rows",
-        lambda: f"{MART_TABLE} rows={jobs.rowcount(MART_TABLE)}",
+        lambda: f"{MART_TABLE} rows={jobs.count_rows(MART_TABLE)}",
     )
 
     # ---- STEG 3: COPY INTO stage ----
@@ -59,7 +59,7 @@ def main() -> None:
 
         # COPY INTO @stage/prefix/ FROM ( <query> )
         # Dette er en Snowflake-native eksport, og ser veldig "data engineering" ut.
-        stage_path = jobs.copy_query_to_stage_csv(
+        stage_path = jobs.copy_query_results_to_stage_csv(
             sql_query=query,                 # SQL-query som skal eksporteres
             stage_name=EXPORT_STAGE,         # Snowflake stage som filene skrives til
             stage_prefix="customer_kpis/top10",  # "folder path" inne i stage
@@ -81,9 +81,10 @@ def main() -> None:
         # GET @stage/path file://<local_path>/
         # Dette laster ned filene som COPY INTO la på stage.
         res = jobs.download_stage_to_local(
-            "@VLO_EXPORT_STAGE/customer_kpis/top10/",  # Stage-path må matche det vi brukte i COPY INTO
-            EXPORT_DIR,                                # Lokal mappe der filene lagres
+            f"@{EXPORT_STAGE}/customer_kpis/top10/",
+            EXPORT_DIR,
         )
+
 
         # Returnerer statusmelding for rapport
         return f"Downloaded {res.files_downloaded} file(s) to: {res.local_dir}"
